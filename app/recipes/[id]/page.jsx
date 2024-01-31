@@ -3,7 +3,8 @@ import { IoTimeOutline } from "react-icons/io5";
 import { FaPencil } from "react-icons/fa6";
 
 async function getData(id) {
-  const res = await fetch(`http://localhost:3000/api/recipes/${id}`, {
+  const url = process.env.API_URL;
+  const res = await fetch(`${url}/api/recipes/${id}`, {
     cache: "no-store",
   });
   if (!res.ok) {

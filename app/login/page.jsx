@@ -7,14 +7,6 @@ import { signIn, useSession } from "next-auth/react";
 export default function Login() {
   const router = useRouter();
   const session = useSession();
-  console.log(session);
-
-  if (session.status === "loading") {
-    return <div>Loading...</div>;
-  }
-  if (session.status === "authenticated") {
-    router.push("/dashboard");
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,7 +14,21 @@ export default function Login() {
     const email = e.target[0].value;
     const password = e.target[1].value;
 
-    signIn("credentials", { email, password });
+    try {
+      const res = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+      if (!res.ok) {
+        throw new Error(res.error);
+      }
+      if (res.ok) {
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
